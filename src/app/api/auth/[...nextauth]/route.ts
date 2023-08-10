@@ -1,10 +1,7 @@
-import api from 'app/api/ky';
-import { Tokens } from 'types/Tokens';
-
 import NextAuth from 'next-auth/next';
 import GoogleProvider from 'next-auth/providers/google';
 
-import { signInViaGoogle } from '../signin';
+import { login, registerViaGoogle } from '../auth';
 
 const handler = NextAuth({
   session: {
@@ -21,14 +18,33 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, account }) {
-      if (account) {
-        const jwtResponse = await signInViaGoogle(account.id_token as string);
+    async signIn({ account, user }) {
+      switch (account?.provider) {
+        case 'google':
+          const registerResponse = await registerViaGoogle(
+            account.id_token as string
+          );
 
-        console.log('response: ' + jwtResponse);
+          if (!registerResponse) {
+            return '/unauthorized';
+          }
+
+          const loginResponse = await login(registerResponse);
+
+          console.log('LOGIN RES: ' + loginResponse);
+
+          if (!loginResponse) {
+            return '/unauthorized';
+          }
+
+          account.access_token = loginResponse.accessToken;
+          account.refresh_token = loginResponse.refreshToken;
+
+          return true;
+
+        default:
+          return '/unknownProvider';
       }
-
-      return token;
     },
   },
 });
