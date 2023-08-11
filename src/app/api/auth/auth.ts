@@ -1,5 +1,5 @@
 import { Tokens } from 'types/Tokens';
-import { UserCredentials } from 'types/User';
+import { User, UserCredentials } from 'types/User';
 
 import api from '../ky';
 
@@ -32,4 +32,32 @@ export async function login(
   }
 
   return await response.json<Tokens>();
+}
+
+export async function refresh(refreshToken: string): Promise<Tokens | false> {
+  const response = await api.get('auth/refresh', {
+    headers: {
+      Authorization: `Bearer: ${refreshToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    return false;
+  }
+
+  return await response.json<Tokens>();
+}
+
+export async function whoAmI(accessToken: string): Promise<User | false> {
+  console.log();
+
+  const response = await api.get('auth/whoAmI', {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  if (!response.ok) {
+    return false;
+  }
+
+  return await response.json<User>();
 }
