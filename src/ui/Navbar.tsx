@@ -4,7 +4,7 @@ import Button from './components/Button';
 
 export default function Navbar() {
   return (
-    <header className="flex flex-row items-center justify-between px-15 w-full">
+    <header className="flex flex-row items-center justify-between px-16 py-8 w-full">
       <span>Frontend Boilerplate</span>
       <span>
         <Link
