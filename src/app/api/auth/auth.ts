@@ -49,8 +49,6 @@ export async function refresh(refreshToken: string): Promise<Tokens | false> {
 }
 
 export async function whoAmI(accessToken: string): Promise<User | false> {
-  console.log();
-
   const response = await api.get('auth/whoAmI', {
     headers: { Authorization: `Bearer ${accessToken}` },
   });

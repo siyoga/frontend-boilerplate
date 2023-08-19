@@ -19,7 +19,7 @@ export default function SignInButton({
     <button
       onClick={() => signIn(provider.id)}
       disabled={disabled}
-      className={`rounded-lg flex flex-row items-center justify-between${
+      className={`rounded-lg flex flex-row items-center px-3 py-2 gap-3 font-semibold text-white justify-between${
         className ? ` ${className}` : ''
       }`}
     >
